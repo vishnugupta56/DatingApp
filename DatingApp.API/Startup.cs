@@ -1,8 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using DatingApp.API.BalServices;
 using DatingApp.API.Data;
+using DatingApp.API.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +16,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+//using Microsoft.AspNetCore.Authentication.JwtBearer;
 namespace DatingApp.API
 
 {
@@ -31,6 +37,17 @@ namespace DatingApp.API
             services.AddDbContext<DataContext>(x=>x.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddControllers();
             services.AddCors();
+            services.AddScoped<IUser,UserService>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options=>{
+                  options.TokenValidationParameters=new TokenValidationParameters  {
+                      ValidateIssuerSigningKey=true,
+                      IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetSection("AppSettings:TokenSecret").Value)),
+                      ValidateAudience=false,
+                      ValidateIssuer=false
+                  };   
+
+            });
         
         }
 
@@ -45,7 +62,7 @@ namespace DatingApp.API
          //   app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseAuthentication();
             app.UseAuthorization();
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyMethod());
             app.UseEndpoints(endpoints =>
