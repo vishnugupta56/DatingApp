@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BsDropdownModule , TabsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
+import { JwtModule } from '@auth0/angular-jwt';
 import { NgxGalleryModule } from 'ngx-gallery';
 
 import { AppComponent } from './app.component';
@@ -17,10 +18,13 @@ import { MemberListComponent } from './Members/Member-list/Member-list.component
 import { ListsComponent } from './lists/lists.component';
 import { AppRoutes } from './routes';
 import { MemberCardComponent } from './Members/Member-Card/Member-Card.component';
-import { JwtModule } from '@auth0/angular-jwt';
 import { MemberDetailComponent } from './Members/member-detail/member-detail.component';
+import { MemberEditComponent } from './Members/Member-edit/Member-edit.component';
 import { MemberDetailResolver } from './_resolvers/member-Detail.resolver';
 import { MemberlistResolver } from './_resolvers/members-list.resolver';
+import { MemberEditResolver } from './_resolvers/member-edit.resolver';
+import { UnsavedChangesPrompt } from './_guards/member-edit.guard';
+
 
 // Auto Inject token to all Http Request
 export function token() {
@@ -44,7 +48,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberListComponent,
       ListsComponent,
       MemberCardComponent,
-      MemberDetailComponent
+      MemberDetailComponent,
+      MemberEditComponent
    ],
    imports: [
       BrowserModule,
@@ -68,6 +73,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       ErrorInterceptorProvidor,
       MemberDetailResolver,
       MemberlistResolver,
+      MemberEditResolver,
+      UnsavedChangesPrompt,
       { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
    ],
    bootstrap: [

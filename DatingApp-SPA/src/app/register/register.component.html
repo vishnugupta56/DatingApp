@@ -1,7 +1,7 @@
 <form  #registerForm="ngForm" (ngSubmit)="register()">
   <h2 class="text-center text-primary">Sign Up</h2>
   <hr>
-<div class="form-group">
+<div class="form-group"  style="display: none;">
   <select class="form-control" id="favouriteValue">
     <option *ngFor="let value of ValuesForHome" value={{value.id}} text={{value.name}}></option>
   </select>

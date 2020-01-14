@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.DTOS;
@@ -26,15 +28,28 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> GetUsers()
         {
             var Users = await _dating.GetAllUsers();
-            var UsersToReturn=_mapper.Map<IEnumerable<UsersforListDto>>(Users);
+            var UsersToReturn = _mapper.Map<IEnumerable<UsersforListDto>>(Users);
             return Ok(UsersToReturn);
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(int id)
         {
             var User = await _dating.GetUser(id);
-            var UserToReturn=_mapper.Map<UserForDetailsDto>(User);
+            var UserToReturn = _mapper.Map<UserForDetailsDto>(User);
             return Ok(UserToReturn);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserForUpdate user)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+            var UserFromRepo=await this._dating.GetUser(id);
+
+            _mapper.Map(user,UserFromRepo);    
+             if(await _dating.SaveAll())
+                return NoContent();
+           throw new Exception($"Update User {id} failed on save");     
         }
     }
 }
