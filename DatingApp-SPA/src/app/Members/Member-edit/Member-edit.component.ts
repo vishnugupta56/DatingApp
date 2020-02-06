@@ -14,6 +14,7 @@ import { AuthService } from 'src/app/_Services/Auth.service';
 export class MemberEditComponent implements OnInit {
 
   user: User;
+  photoUrl: string;
   // access child object usign ViewChild option
   @ViewChild('EditForm', { static: true }) EditForm: NgForm;
   // prevent user to close window if data is not saved
@@ -29,9 +30,11 @@ export class MemberEditComponent implements OnInit {
      ,        private userservice: UserService , private authService: AuthService ) { }
 
   ngOnInit() {
+    this.authService.CurrentPhotoUrl.subscribe(photo => this.photoUrl = photo);
     this.activeRoute.data.subscribe(data => {
      this.user = data['user'];
     });
+
   }
 
   UpdateUser() {
@@ -43,4 +46,7 @@ export class MemberEditComponent implements OnInit {
   });
   }
 
+  UpdateUserMainPhoto(photoUrl: string) {
+    this.user.photoUrl = photoUrl;
+  }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using DatingApp.API.Data;
 using DatingApp.API.Interfaces;
@@ -31,10 +32,21 @@ namespace DatingApp.API.BalServices
             return Users;
         }
 
+        public async Task<Photo> GetPhoto(int Id)
+        {
+            var photo = await _context.Photo.FirstOrDefaultAsync(q=>q.Id==Id);
+            return photo;
+        }
+
         public async Task<User> GetUser(int Id)
         {
             var User =await _context.User.Include(p=>p.Photos).FirstOrDefaultAsync(q=>q.Id==Id);
             return User;
+        }
+
+        public async Task<Photo> GetUserCurrentPhoto(int id)
+        {
+           return await _context.Photo.Where(u=>u.UserID==id).FirstOrDefaultAsync(i=>i.IsMain);
         }
 
         public async Task<bool> SaveAll()

@@ -6,6 +6,7 @@ import { BsDropdownModule , TabsModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgxGalleryModule } from 'ngx-gallery';
+import { FileUploadModule } from 'ng2-file-upload';
 
 import { AppComponent } from './app.component';
 import { NavComponent } from './nav/nav.component';
@@ -24,6 +25,8 @@ import { MemberDetailResolver } from './_resolvers/member-Detail.resolver';
 import { MemberlistResolver } from './_resolvers/members-list.resolver';
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { UnsavedChangesPrompt } from './_guards/member-edit.guard';
+import { PhotoEditorComponent } from './Members/photo-editor/photo-editor.component';
+
 
 
 // Auto Inject token to all Http Request
@@ -49,7 +52,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       ListsComponent,
       MemberCardComponent,
       MemberDetailComponent,
-      MemberEditComponent
+      MemberEditComponent,
+      PhotoEditorComponent
    ],
    imports: [
       BrowserModule,
@@ -58,6 +62,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       BsDropdownModule.forRoot(),
       TabsModule.forRoot(),
       NgxGalleryModule,
+      FileUploadModule,
       RouterModule.forRoot(AppRoutes),
       JwtModule.forRoot({
          config: {

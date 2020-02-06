@@ -18,7 +18,7 @@ namespace DatingApp.API.BalServices
         }
         public async Task<User> Login(string username, string Password)
         {
-            var details= await _context.User.FirstOrDefaultAsync(x=>x.Username==username);
+            var details= await _context.User.Include(p=> p.Photos).FirstOrDefaultAsync(x=>x.Username==username);
             if(details==null)
             return null;            
             if(!VerifyPasswordHash(Password,details.PasswordHash,details.PasswordSalt))
