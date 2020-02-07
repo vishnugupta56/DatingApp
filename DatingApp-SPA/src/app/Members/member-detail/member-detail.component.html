@@ -3,7 +3,7 @@
     <div class="col-sm-4">
       <div class="card">
         <img
-          src="{{ user.photoUrl }}"
+          src="{{ user.photoUrl || '../../../../../assets/user.png' }}"
           class="card-img-top img-thumbnail"
           alt="{{ user.knownAs }}"
         />
@@ -43,13 +43,13 @@
       <div class="tab-panel">
         <tabset class="member-tabset">
           <tab heading="About {{user.knownAs}}">
-          <h4>Description</h4>
+          <h4 [style.display]="user.introduction ?  null: 'none'">Description</h4>
           <p>{{user.introduction}}</p>
-          <h4>Looking for</h4>
+          <h4 [ngStyle]="{'display':user.lookingFor ?  null: 'none'}">Looking for</h4>
           <p>{{user.lookingFor}}</p>
           </tab>
           <tab heading="Interest">
-            <h4>Interest</h4>
+            <h4 [ngStyle]="{'display':user.interests ?  null: 'none'}">Interest</h4>
             <p>{{user.interests}}</p>
           </tab>
           <tab heading="Photos">
