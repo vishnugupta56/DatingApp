@@ -3,6 +3,7 @@ import { User } from '../../_models/User';
 import { AlertifyService } from '../../_Services/alertify.service';
 import { UserService } from '../../_Services/User.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Pagination, PaginatedResult } from 'src/app/_models/Pagination';
 
 @Component({
   selector: 'app-member-list',
@@ -12,6 +13,14 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 export class MemberListComponent implements OnInit {
   users: User[];
+  pagination: Pagination;
+  initialPage = 1;
+  GenderList = [{value: 'male', Display: 'Males'}, {value: 'female', Display: 'females'}];
+  userParam: any = {};
+  user: User = JSON.parse(localStorage.getItem('User'));
+
+
+
   constructor(
     private userService: UserService,
     private alertify: AlertifyService,
@@ -21,18 +30,47 @@ export class MemberListComponent implements OnInit {
   ngOnInit() {
     // this.loadUsers();
     this.route.data.subscribe(user => {
-      this.users = user['users']
+      this.users = user['users'].result;
+      this.pagination = user['users'].pagination;
+      console.log(user['users'].pagination);
     });
+    this.userParam.gender = this.user.gender === 'male' ? 'female' : 'male';
+    this.userParam.minAge = 18;
+    this.userParam.maxAge = 99;
+    this.userParam.orderBy = 'lastActive';
   }
 
-  // loadUsers() {
-  //   return this.userService.getUsers().subscribe(
-  //     (user: User[]) => {
-  //       this.users = user;
-  //     },
-  //     error => {
-  //       this.alertify.Error(error);
-  //     }
-  //   );
-  // }
+  resetFilter() {
+    this.userParam.gender = this.user.gender === 'male' ? 'female' : 'male';
+    this.userParam.minAge = 18;
+    this.userParam.maxAge = 99;
+   // this.userParam.orderBy = 'lastActive';
+    this.loadUsers();
+  }
+
+  pageChangeds(event: any): void {
+    // if (!this.Initiated) {
+    this.pagination.currentPage = event.page;
+    this.initialPage = event.page;
+    this.loadUsers();
+    console.log(this.initialPage);
+    // }
+   // this.Initiated = !this.Initiated;
+  }
+  loadUsers() {
+    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemPerPage, this.userParam)
+    .subscribe(
+      (res: PaginatedResult<User[]>) => {
+      this.users = res.result;
+    // this.pagination = res.pagination;
+      this.pagination.itemPerPage = res.pagination.itemPerPage;
+      this.pagination.totalItems = res.pagination.totalItems;
+      this.pagination.totalPages = res.pagination.totalPages;
+      console.log(this.pagination);
+    },
+      error => {
+        this.alertify.Error(error);
+      }
+    );
+ }
 }
