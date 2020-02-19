@@ -51,18 +51,16 @@ export class MemberListComponent implements OnInit {
   pageChangeds(event: any): void {
     // if (!this.Initiated) {
     this.pagination.currentPage = event.page;
-    this.initialPage = event.page;
     this.loadUsers();
-    console.log(this.initialPage);
     // }
    // this.Initiated = !this.Initiated;
   }
   loadUsers() {
-    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemPerPage, this.userParam)
+    this.userService.getUsers(this.pagination.currentPage, this.pagination.itemPerPage, this.userParam, null)
     .subscribe(
       (res: PaginatedResult<User[]>) => {
       this.users = res.result;
-    // this.pagination = res.pagination;
+    // this.pagination = res.pagination; // we comment this line because if we assign whole values then page change event call twice
       this.pagination.itemPerPage = res.pagination.itemPerPage;
       this.pagination.totalItems = res.pagination.totalItems;
       this.pagination.totalPages = res.pagination.totalPages;

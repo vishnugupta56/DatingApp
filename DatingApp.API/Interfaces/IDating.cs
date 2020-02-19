@@ -20,5 +20,7 @@ namespace DatingApp.API.Interfaces
         Task<Photo> GetPhoto(int Id);
 
         Task<Photo> GetUserCurrentPhoto(int id);
+
+        Task<Like> GetLikes(int userId, int ReceipientId);
     }
 }
