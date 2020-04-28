@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { User } from 'src/app/_models/User';
 import { UserService } from 'src/app/_Services/User.service';
 import { AlertifyService } from 'src/app/_Services/alertify.service';
 import { ActivatedRoute } from '@angular/router';
 import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gallery';
+import { TabsetComponent } from 'ngx-bootstrap';
 
 
 
@@ -13,7 +14,7 @@ import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation } from 'ngx-gal
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit {
-
+@ViewChild('membersTabs',{static: true}) memberTabs: TabsetComponent;
 user: User;
 galleryOptions: NgxGalleryOptions[];
 galleryImages: NgxGalleryImage[];
@@ -26,7 +27,10 @@ galleryImages: NgxGalleryImage[];
    this.activeRoute.data.subscribe(data => {
      this.user = data['user'];
    });
-
+   this.activeRoute.queryParams.subscribe(data => {
+    const SelectedTab = data['tab'];
+    this.memberTabs.tabs[SelectedTab].active = true;
+  });
    this.galleryOptions = [{
      width : '500px',
      height : '500px',
@@ -49,6 +53,10 @@ galleryImages: NgxGalleryImage[];
       });
     }
     return ImageUrls;
+  }
+
+  ChangeTab(tabId: number) {
+    this.memberTabs.tabs[tabId].active = true;
   }
 // without resolver we create function and use safe operator '?' when binding.
   // Getuser()  {

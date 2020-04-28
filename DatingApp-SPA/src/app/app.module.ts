@@ -19,6 +19,7 @@ import { ErrorInterceptorProvidor } from './_Services/error.interceptor';
 import { MessagesComponent } from './Messages/Messages.component';
 import { MemberListComponent } from './Members/Member-list/Member-list.component';
 import { ListsComponent } from './lists/lists.component';
+import { MemberMessagesComponent } from './Members/Member-Messages/Member-Messages.component';
 import { AppRoutes } from './routes';
 import { MemberCardComponent } from './Members/Member-Card/Member-Card.component';
 import { MemberDetailComponent } from './Members/member-detail/member-detail.component';
@@ -29,6 +30,8 @@ import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { UnsavedChangesPrompt } from './_guards/member-edit.guard';
 import { PhotoEditorComponent } from './Members/photo-editor/photo-editor.component';
 import { ListsResolver } from './_resolvers/lists.resolver';
+import { MessagesResolver } from './_resolvers/messages.resolver';
+
 
 
 
@@ -57,7 +60,8 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberDetailComponent,
       MemberEditComponent,
       PhotoEditorComponent,
-      TimeAgoPipe
+      TimeAgoPipe,
+      MemberMessagesComponent
    ],
    imports: [
       BrowserModule,
@@ -90,6 +94,7 @@ export class CustomHammerConfig extends HammerGestureConfig  {
       MemberEditResolver,
       UnsavedChangesPrompt,
       ListsResolver,
+      MessagesResolver,
       { provide: HAMMER_GESTURE_CONFIG, useClass: CustomHammerConfig }
    ],
    bootstrap: [

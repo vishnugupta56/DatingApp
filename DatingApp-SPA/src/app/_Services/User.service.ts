@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { User } from '../_models/User';
 import { PaginatedResult } from '../_models/Pagination';
 import { map } from 'rxjs/operators';
+import { Messages } from '../_models/Messages';
 
 // Manually sending Token to Server
 // const httpheaderOptions = {
@@ -73,4 +74,41 @@ DeletePhoto( userId: number, id: number) {
 SendLike(userid: number, recipientId: number) {
   return this.http.post(this.baseUrl + userid + '/like/' + recipientId, {});
 }
+
+GetMessages( id: number, pageNumber?,pageSize? , messageContainer?) {
+  const paginatedResult: PaginatedResult<Messages[]> = new PaginatedResult<Messages[]>();
+
+  let params = new HttpParams();
+  params = params.append('MessageContainer' , messageContainer);
+  if (pageNumber != null && pageSize != null) {
+    params  = params.append('PageNumber', pageNumber);
+    params = params.append('PageSize', pageSize);
+  }
+  return this.http.get<Messages[]>(this.baseUrl + id + '/messages', { observe: 'response', params})
+  .pipe(
+    map(response => {
+    paginatedResult.result = response.body;
+    if (response.headers.get('Pagination') != null ) {
+      paginatedResult.pagination = JSON.parse(response.headers.get('Pagination'));
+     }
+    return paginatedResult;
+    })
+  );
+}
+
+ getMessageThread(id: number, recipientId: number) {
+    return this.http.get<Messages[]>(this.baseUrl + id + '/messages/thread/' + recipientId);
+ }
+
+ SendMessage(id: number, message: Messages) {
+   return this.http.post(this.baseUrl + id + '/Messages', message);
+ }
+
+ DeleteMessage(id: number, userid: number) {
+   return this.http.post(this.baseUrl + userid + '/Messages/' + id, {});
+ }
+
+ MarkMessageAsRead(id: number, userid: number) {
+   return this.http.post(this.baseUrl + userid + '/Messages/' + id + '/read', {}).subscribe();
+ }
 }
