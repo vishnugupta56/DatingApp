@@ -67,7 +67,9 @@ namespace DatingApp.API.BalServices
 
         public async Task<IEnumerable<int>> GetLikedUserId(int UserID, bool IsLikee)
         {
-            var users = await _context.User.Include(p => p.Likers).Include(p => p.Likees).FirstOrDefaultAsync(u => u.Id == UserID);
+            var users = await _context.User.Include(p => p.Likers)
+           // .Include(p => p.Likees)  // Due to the Lazy Loadiing We can remove Include Statement which produce a warning
+             .FirstOrDefaultAsync(u => u.Id == UserID);
             if (IsLikee)
             {
                 // return all user who liked by logged in user
@@ -92,10 +94,11 @@ namespace DatingApp.API.BalServices
         public async Task<PagedList<Message>> GetMessageForUser(MessagesParam messagesParam)
         {
             var messages = _context.Messages
-            .Include(u => u.Sender)
-            .ThenInclude(p => p.Photos)
-            .Include(u => u.Recipient)
-            .ThenInclude(p => p.Photos).AsQueryable();
+            // .Include(u => u.Sender)   // Due to the Lazy Loadiing We can remove Include Statement which produce a warning
+            // .ThenInclude(p => p.Photos) // Which is related to paging With Include Statement if we perform Count function then 
+            // .Include(u => u.Recipient)  // the Include statement code is unreachable and unesscary which produre warning
+            // .ThenInclude(p => p.Photos)
+            .AsQueryable();
             switch (messagesParam.MessageContainer)
             {
                 case "Inbox":
@@ -116,8 +119,8 @@ namespace DatingApp.API.BalServices
         public async Task<IEnumerable<Message>> GetMessageThread(int userId, int recipientId)
         {
             var messages = await _context.Messages
-            .Include(u => u.Sender).ThenInclude(p => p.Photos)
-            .Include(u => u.Recipient).ThenInclude(p => p.Photos)
+            // .Include(u => u.Sender).ThenInclude(p => p.Photos) // Due to the Lazy Loadiing We can remove Include Statement which produce a warning
+            // .Include(u => u.Recipient).ThenInclude(p => p.Photos)
             .Where(m => (m.RecipientId == userId && m.RecipientDeleted==false && m.SenderId == recipientId) || (m.RecipientId == recipientId && m.SenderId == userId && m.SenderDeleted==false))
             .OrderByDescending(m => m.MessageSent)
             .ToListAsync();

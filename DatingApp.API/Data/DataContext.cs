@@ -1,13 +1,25 @@
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DatingApp.API.Data
 {
     public class DataContext : DbContext
     {
+          //protected readonly IConfiguration Configuration;
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         { }
 
+        //  public DataContext(IConfiguration configuration)
+        // {
+        //     Configuration = configuration;
+        // }
+        // protected override void OnConfiguring(DbContextOptionsBuilder options)
+        // {
+        //     // connect to sql server database
+        //     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
+        // }
         public DbSet<Value> Values { get; set; }
         public DbSet<User> User { get; set; }
         public DbSet<Photo> Photo { get; set; }

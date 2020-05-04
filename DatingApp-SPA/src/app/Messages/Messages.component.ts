@@ -52,7 +52,7 @@ export class MessagesComponent implements OnInit {
         this.alertify.Error('Failed to delete message');
       });
 
-    })
+    });
   }
 
 
